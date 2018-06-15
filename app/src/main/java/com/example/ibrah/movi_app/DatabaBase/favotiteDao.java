@@ -10,9 +10,9 @@ import java.util.List;
 
 @Dao
 public interface favotiteDao {
-    //@Insert
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    int InsertFavoriteMovie(Favorite favorite);
+    @Insert
+    //@Insert(onConflict = OnConflictStrategy.REPLACE)
+    Long InsertFavoriteMovie(Favorite favorite);
     @Query("DELETE FROM favorite_table ")
     void DeleteAll();
     @Query("SELECT * FROM favorite_table ORDER BY mId asc")
