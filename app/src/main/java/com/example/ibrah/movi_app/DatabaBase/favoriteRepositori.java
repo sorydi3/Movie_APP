@@ -9,9 +9,14 @@ import android.support.annotation.NonNull;
 import com.example.ibrah.movi_app.DatabaBase.Favorite;
 import com.example.ibrah.movi_app.DatabaBase.favoriteRoomDatabase;
 import com.example.ibrah.movi_app.DatabaBase.favotiteDao;
+import com.example.ibrah.movi_app.DetailsActivity;
 import com.example.ibrah.movi_app.MainActivity;
 import com.example.ibrah.movi_app.Utils.Movie;
 import com.example.ibrah.movi_app.Utils.QuerryMovies;
+import com.example.ibrah.movi_app.Utils.QuerryReviews;
+import com.example.ibrah.movi_app.Utils.QuerryTrailers;
+import com.example.ibrah.movi_app.Utils.Review;
+import com.example.ibrah.movi_app.Utils.Trailer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,9 +29,10 @@ public class favoriteRepositori {
     private favotiteDao mWordDao;
     public LiveData<List<Favorite>> mAllFavorite;
     public static MutableLiveData<List<Movie>>mMovie=new MutableLiveData<>();
-    public static MutableLiveData<List<Movie>>mTrailers=new MutableLiveData<>();
-    public static MutableLiveData<List<Movie>>mReviews=new MutableLiveData<>();
+    public static MutableLiveData<List<Trailer>> mTrailers = new MutableLiveData<>();
+    public static MutableLiveData<List<Review>> mReviews = new MutableLiveData<>();
     public static int optionQuerry=0;
+    public static Long mRowDeleted;
 
    public favoriteRepositori(Application application) {
         favoriteRoomDatabase db = favoriteRoomDatabase.getDatabase(application);
@@ -41,14 +47,42 @@ public class favoriteRepositori {
         new insertAsyncTask(mWordDao).execute(word);
     }
 
-    public MutableLiveData<List<Movie>> getDataNetworkTrailers() {
-       //TODO ADD ASYNCRO TASK
-       return null;
+    public MutableLiveData<List<Trailer>> getDataNetworkTrailers() {
+        //TODO falata contruir los links
+        new fetcheMovieAsyncroTask_trailers().execute(DetailsActivity.URL_VIDEOS);
+        return mTrailers;
     }
 
-    public MutableLiveData<List<Movie>> getDataNetworkReviews() {
-       //TODO ADD ASYNNCROTASK
-       return null;
+    public MutableLiveData<List<Review>> getDataNetworkReviews() {
+        //TODO falta construir los links
+        new fetcheMovieAsyncroTask_reviews().execute(DetailsActivity.URL_REVIES);
+        return mReviews;
+    }
+
+    public Long delete(int id) {
+        new deleteAsyncTask(mWordDao).execute(id);
+        return mRowDeleted;
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Integer, Void, Long> {
+
+        private favotiteDao mAsyncTaskDao;
+
+        deleteAsyncTask(favotiteDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Long doInBackground(final Integer... params) {
+            mAsyncTaskDao.deleteFavoriteMovie(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Long aLong) {
+            super.onPostExecute(aLong);
+            mRowDeleted = aLong;
+        }
     }
 
     private static class insertAsyncTask extends AsyncTask<Favorite, Void, Void> {
@@ -94,5 +128,46 @@ public class favoriteRepositori {
         }
     }
 
+    private static class fetcheMovieAsyncroTask_trailers extends AsyncTask<String, Void, List<Trailer>> {
+
+        @Override
+        protected List<Trailer> doInBackground(String... strings) {
+            if (strings[0] == null) {
+                return null;
+            }
+
+            // Perform the network request, parse the response, and extract a list of earthquakes.+
+
+            List<Trailer> trailers = QuerryTrailers.fetchData(strings[0]);
+            return trailers;
+        }
+
+        @Override
+        protected void onPostExecute(List<Trailer> trailers) {
+            super.onPostExecute(trailers);
+            mTrailers.setValue(trailers);
+        }
+    }
+
+    private static class fetcheMovieAsyncroTask_reviews extends AsyncTask<String, Void, List<Review>> {
+
+        @Override
+        protected List<Review> doInBackground(String... strings) {
+            if (strings[0] == null) {
+                return null;
+            }
+
+            // Perform the network request, parse the response, and extract a list of earthquakes.+
+
+            List<Review> reviews = QuerryReviews.fetchData(strings[0]);
+            return reviews;
+        }
+
+        @Override
+        protected void onPostExecute(List<Review> reviews) {
+            super.onPostExecute(reviews);
+            mReviews.setValue(reviews);
+        }
+    }
     //TODO ADD ASYNCROS ABOVE 
 }

@@ -2,6 +2,7 @@ package com.example.ibrah.movi_app;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.example.ibrah.movi_app.DatabaBase.favoriteRepositori;
 import com.example.ibrah.movi_app.Utils.Movie;
 import com.example.ibrah.movi_app.viewModel.ViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,10 +28,9 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
     public static String URL_TOP_RATED="https://api.themoviedb.org/3/movie/top_rated?api_key=61e054df38b65cdfb476d6eeffe14dc3";
     public static String URL_POPULAR="https://api.themoviedb.org/3/movie/popular?api_key=61e054df38b65cdfb476d6eeffe14dc3";
-    public static String URL="";
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
-    private int _mID=3;
-    private boolean change_observer=true;
+    private List<Movie> mMovies;
+
     private ViewModel mViewModel;
     Adapter_main adapter;
     @BindView(R.id.toolbar_tv)
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onChanged(@Nullable final List<Movie> words) {
                     // Update the cached copy of the words in the adapter.
                     adapter.setWords(words);
+                    mMovies = words;
                 }
             });
             FloatingActionButton fab = findViewById(R.id.fab);
@@ -70,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
             adapter.SetLister(new Adapter_main.Listener() {
                 @Override
                 public void onClick(int position) {
-                    Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-                    startActivity(intent);
+                    sendData(position);
                 }
             });
 
@@ -113,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             //TODO need to fix _mID when retote the fone its get reinicialised againg and repeat the id's againt (primari keys database)
+            int _mID = 0;
             Favorite favorite   = new Favorite(_mID++,data.getStringExtra(DetailsActivity.EXTRA_REPLY));
             mViewModel.insert(favorite);
         } else {
@@ -121,5 +123,15 @@ public class MainActivity extends AppCompatActivity {
                     R.string.empty_not_saved,
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void sendData(int position) {
+        Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+        // bundle that hold the data of the currently playing song
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("ArrayList", (ArrayList<Movie>) mMovies);
+        bundle.putInt("position", position);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

@@ -8,29 +8,33 @@ import android.arch.lifecycle.MutableLiveData;
 import com.example.ibrah.movi_app.DatabaBase.Favorite;
 import com.example.ibrah.movi_app.DatabaBase.favoriteRepositori;
 import com.example.ibrah.movi_app.Utils.Movie;
+import com.example.ibrah.movi_app.Utils.Review;
+import com.example.ibrah.movi_app.Utils.Trailer;
 
 import java.util.List;
 
 public class ViewModelDetailActivity extends AndroidViewModel {
-    public static String URL_top;
-    public static String URL_pop;
     public static favoriteRepositori mRepository;
-    public static void SetUrls(String url_top,String url_pop){
-        URL_top=url_top;
-        URL_pop=url_pop;
-    }
-
-    public static MutableLiveData<List<Movie>>  mTrailers;
-    public static MutableLiveData<List<Movie>> mReviews;
+    public static MutableLiveData<List<Trailer>> mTrailers;
+    public static MutableLiveData<List<Review>> mReviews;
 
     public ViewModelDetailActivity (Application application) {
         super(application);
         mRepository = new favoriteRepositori(application);
-        mReviews= mRepository.getDataNetworkTrailers();
-        mTrailers= mRepository.getDataNetworkReviews();
+        mTrailers = mRepository.getDataNetworkTrailers();
+        mReviews = mRepository.getDataNetworkReviews();
     }
 
-    public static MutableLiveData<List<Movie>> getAllReviews(){return mTrailers;}
-    public static MutableLiveData<List<Movie>> getAllTrailers(){return mReviews;}
+    public MutableLiveData<List<Review>> getAllReviews() {
+        return mReviews;
+    }
+
+    public MutableLiveData<List<Trailer>> getAllTrailers() {
+        return mTrailers;
+    }
     public void insert(Favorite favorite) { mRepository.insert(favorite); }
+
+    public Long delete(int id) {
+        return mRepository.delete(id);
+    }
 }

@@ -180,10 +180,7 @@ public class QuerryMovies {
                 }
                 // Add the new {@link Earthquake} to the list of Books.
                 Log.i(LOG_TAG, title + "" + date + "" + rating + "" + thumbmail);
-                //COMPLETED fix contructor movie
-                List<String> videos=null;
-                List<String> reviews=null;
-                movie.add(new Movie(_id, title,date,rating,reviews,videos,thumbmail,-1));
+                movie.add(new Movie(_id, title, date, rating, thumbmail, -1));
             }
 
         } catch (JSONException e) {

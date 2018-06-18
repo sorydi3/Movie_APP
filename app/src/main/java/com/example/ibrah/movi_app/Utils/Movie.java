@@ -51,18 +51,13 @@ public class Movie implements Parcelable {
      * @param title         - Title of the movie
      * @param date        - Author of the movie
      * @param rating        - Rating of the movie (e.g. 3.5)
-     * @param reviews   - Description of the movie
-     * @param mVideos
      * @param thumbnailLink - Link for the book image
      */
-    public Movie(int mId, String title, String date,
-                 int rating, List<String> reviews, List<String> mVideos, String thumbnailLink,int sav) {
+    public Movie(int mId, String title, String date, int rating, String thumbnailLink, int sav) {
         this.mId = mId;
         mTitle = title;
         mDate = date;
         mRating = rating;
-        mReviews = reviews;
-        this.mVideos = mVideos;
         mThumbnailLink = thumbnailLink;
         this.saved=sav;
     }
@@ -73,10 +68,6 @@ public class Movie implements Parcelable {
         mTitle = input.readString();
         mDate = input.readString();
         mRating = input.readInt();
-        mReviews =new ArrayList<String>();
-        input.readList(mReviews,null);
-        mVideos =new ArrayList<String>();
-        input.readList(mVideos,null);
         mThumbnailLink = input.readString();
 
     }
@@ -140,20 +131,6 @@ public class Movie implements Parcelable {
     }
 
     /**
-     * Getter method - Description
-     */
-    public List<String> getmReviews() {
-        return mReviews;
-    }
-
-    /**
-     * Setter method - Description
-     */
-    public void setmReviews(List<String> reviews) {
-        mReviews = reviews;
-    }
-
-    /**
      * Getter method - Thumbnail Link
      */
     public String getThumbnailLink() {
@@ -179,8 +156,6 @@ public class Movie implements Parcelable {
         dest.writeString(mTitle);
         dest.writeString(mDate);
         dest.writeInt(mRating);
-        dest.writeList(mReviews);
-        dest.writeList(mVideos);
         dest.writeString(mThumbnailLink);
     }
 
@@ -195,13 +170,6 @@ public class Movie implements Parcelable {
         }
     };
 
-    public List<String> getmVideos() {
-        return mVideos;
-    }
-
-    public void setmVideos(List<String> mVideos) {
-        this.mVideos = mVideos;
-    }
 
     public int isSaved() {
         return saved;

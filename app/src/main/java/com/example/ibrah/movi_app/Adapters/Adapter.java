@@ -1,4 +1,4 @@
-package com.example.ibrah.movi_app;
+package com.example.ibrah.movi_app.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.ibrah.movi_app.DatabaBase.Favorite;
+import com.example.ibrah.movi_app.R;
 
 import java.util.List;
 

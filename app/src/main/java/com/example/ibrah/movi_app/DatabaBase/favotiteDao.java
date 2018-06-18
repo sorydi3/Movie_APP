@@ -17,4 +17,7 @@ public interface favotiteDao {
     void DeleteAll();
     @Query("SELECT * FROM favorite_table ORDER BY mId asc")
     LiveData<List<Favorite>> ListOfFavorits();
+
+    @Query("SELECT mId FROM favorite_table WHERE mId=:id")
+    Long deleteFavoriteMovie(int id);
 }
