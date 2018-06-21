@@ -34,7 +34,7 @@ public class ViewModelDetailActivity extends AndroidViewModel {
     }
     public void insert(Favorite favorite) { mRepository.insert(favorite); }
 
-    public Long delete(int id) {
-        return mRepository.delete(id);
+    public void delete(int id) {
+        mRepository.delete(id);
     }
 }

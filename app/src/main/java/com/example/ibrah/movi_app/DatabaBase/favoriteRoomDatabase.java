@@ -60,10 +60,10 @@ public abstract class favoriteRoomDatabase extends RoomDatabase {
             // Not needed if you only populate on creation.
             mDao.DeleteAll();
 
-            Favorite favorite = new Favorite(1,"Fast and furious");
-            mDao.InsertFavoriteMovie(favorite);
-            Favorite favorite1 = new Favorite(2,"World");
-            mDao.InsertFavoriteMovie(favorite1);
+            // Favorite favorite = new Favorite(1,"Fast and furious");
+            //mDao.InsertFavoriteMovie(favorite);
+            // Favorite favorite1 = new Favorite(2,"World");
+            // mDao.InsertFavoriteMovie(favorite1);
             return null;
         }
     }

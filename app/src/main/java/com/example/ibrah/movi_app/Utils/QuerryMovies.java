@@ -178,9 +178,16 @@ public class QuerryMovies {
                 if (currentObjectInJasonArray.has("release_date")) {
                     date =currentObjectInJasonArray.getString("release_date");
                 }
+
+
                 // Add the new {@link Earthquake} to the list of Books.
-                Log.i(LOG_TAG, title + "" + date + "" + rating + "" + thumbmail);
-                movie.add(new Movie(_id, title, date, rating, thumbmail, -1));
+                String mOverview = null;
+                if (currentObjectInJasonArray.has("overview")) {
+                    mOverview = currentObjectInJasonArray.getString("overview");
+                }
+
+                Log.i(LOG_TAG, title + "------" + date + "-------" + rating + "--------" + thumbmail + "---- " + mOverview);
+                movie.add(new Movie(_id, title, date, rating, thumbmail, -1, mOverview));
             }
 
         } catch (JSONException e) {

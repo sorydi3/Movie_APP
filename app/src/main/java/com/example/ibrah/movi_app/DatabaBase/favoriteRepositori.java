@@ -59,12 +59,11 @@ public class favoriteRepositori {
         return mReviews;
     }
 
-    public Long delete(int id) {
+    public void delete(int id) {
         new deleteAsyncTask(mWordDao).execute(id);
-        return mRowDeleted;
     }
 
-    private static class deleteAsyncTask extends AsyncTask<Integer, Void, Long> {
+    private static class deleteAsyncTask extends AsyncTask<Integer, Void, Void> {
 
         private favotiteDao mAsyncTaskDao;
 
@@ -73,16 +72,11 @@ public class favoriteRepositori {
         }
 
         @Override
-        protected Long doInBackground(final Integer... params) {
+        protected Void doInBackground(final Integer... params) {
             mAsyncTaskDao.deleteFavoriteMovie(params[0]);
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Long aLong) {
-            super.onPostExecute(aLong);
-            mRowDeleted = aLong;
-        }
     }
 
     private static class insertAsyncTask extends AsyncTask<Favorite, Void, Void> {

@@ -3,9 +3,6 @@ package com.example.ibrah.movi_app.Utils;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Movie implements Parcelable {
 
     /**
@@ -30,19 +27,10 @@ public class Movie implements Parcelable {
     private int mRating;
 
     /**
-     * Reviews
-     */
-    private List<String> mReviews;
-
-    /**
-     * videos
-     */
-    private List<String> mVideos;
-
-    /**
      * Thumbnail Link
      */
     private String mThumbnailLink;
+    private String mOverview;
 
 
     /**
@@ -52,14 +40,16 @@ public class Movie implements Parcelable {
      * @param date        - Author of the movie
      * @param rating        - Rating of the movie (e.g. 3.5)
      * @param thumbnailLink - Link for the book image
+     * @param mOverview
      */
-    public Movie(int mId, String title, String date, int rating, String thumbnailLink, int sav) {
+    public Movie(int mId, String title, String date, int rating, String thumbnailLink, int sav, String mOverview) {
         this.mId = mId;
         mTitle = title;
         mDate = date;
         mRating = rating;
         mThumbnailLink = thumbnailLink;
         this.saved=sav;
+        this.mOverview = mOverview;
     }
 
     public Movie(Parcel input) {
@@ -69,6 +59,7 @@ public class Movie implements Parcelable {
         mDate = input.readString();
         mRating = input.readInt();
         mThumbnailLink = input.readString();
+        mOverview = input.readString();
 
     }
 
@@ -157,6 +148,7 @@ public class Movie implements Parcelable {
         dest.writeString(mDate);
         dest.writeInt(mRating);
         dest.writeString(mThumbnailLink);
+        dest.writeString(mOverview);
     }
 
 
@@ -171,11 +163,20 @@ public class Movie implements Parcelable {
     };
 
 
-    public int isSaved() {
-        return saved;
+    public boolean isSaved() {
+        if (saved > 0) return true;
+        else return false;
     }
 
     public void setSaved(int saved) {
         this.saved = saved;
+    }
+
+    public String getmOverview() {
+        return mOverview;
+    }
+
+    public void setmOverview(String mOverview) {
+        this.mOverview = mOverview;
     }
 }

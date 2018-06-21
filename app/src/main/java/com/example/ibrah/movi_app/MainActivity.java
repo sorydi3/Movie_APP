@@ -2,7 +2,6 @@ package com.example.ibrah.movi_app;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public static String URL_POPULAR="https://api.themoviedb.org/3/movie/popular?api_key=61e054df38b65cdfb476d6eeffe14dc3";
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
     private List<Movie> mMovies;
+    boolean swith = true;
 
     private ViewModel mViewModel;
     Adapter_main adapter;
@@ -60,15 +60,6 @@ public class MainActivity extends AppCompatActivity {
                     mMovies = words;
                 }
             });
-            FloatingActionButton fab = findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-                    startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
-                }
-            });
-
             adapter.SetLister(new Adapter_main.Listener() {
                 @Override
                 public void onClick(int position) {
@@ -89,19 +80,21 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                favoriteRepositori.optionQuerry=2;
-                favoriteRepositori.getDataNetwork();
+                Intent intent = new Intent(MainActivity.this, favorite_Activity.class);
+                // bundle that hold the data of the currently playing song
+                startActivity(intent);
             case R.id.action_sort:
-                boolean swith=true;
                 if(swith) {
                     favoriteRepositori.optionQuerry = 1;
+                    Toast.makeText(this, "Popular", Toast.LENGTH_SHORT).show();
                     favoriteRepositori.getDataNetwork();
                     swith=false;
                 }
                 else{
+                    swith = true;
                     favoriteRepositori.optionQuerry=2;
+                    Toast.makeText(this, "Top Rated", Toast.LENGTH_SHORT).show();
                     favoriteRepositori.getDataNetwork();
-                    swith=true;
                 }
 
             default:

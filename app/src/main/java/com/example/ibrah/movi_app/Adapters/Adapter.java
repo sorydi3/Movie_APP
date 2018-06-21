@@ -26,7 +26,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         private final LayoutInflater mInflater;
         private List<Favorite> mWords; // Cached copy of words
 
-        Adapter(Context context) { mInflater = LayoutInflater.from(context); }
+    public Adapter(Context context) {
+        mInflater = LayoutInflater.from(context);
+    }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,7 +48,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             }
         }
 
-        void setWords(List<Favorite> words){
+    public void setWords(List<Favorite> words) {
             mWords = words;
             notifyDataSetChanged();
         }
