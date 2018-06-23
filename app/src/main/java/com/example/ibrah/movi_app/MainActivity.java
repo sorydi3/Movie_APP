@@ -3,7 +3,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +10,9 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
-import com.example.ibrah.movi_app.DatabaBase.Favorite;
+
+import com.example.ibrah.movi_app.Adapters.Adapter_main;
 import com.example.ibrah.movi_app.DatabaBase.favoriteRepositori;
 import com.example.ibrah.movi_app.Utils.Movie;
 import com.example.ibrah.movi_app.viewModel.ViewModel;
@@ -27,7 +26,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
     public static String URL_TOP_RATED="https://api.themoviedb.org/3/movie/top_rated?api_key=61e054df38b65cdfb476d6eeffe14dc3";
     public static String URL_POPULAR="https://api.themoviedb.org/3/movie/popular?api_key=61e054df38b65cdfb476d6eeffe14dc3";
-    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
     private List<Movie> mMovies;
     boolean swith = true;
 
@@ -102,22 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            //TODO need to fix _mID when retote the fone its get reinicialised againg and repeat the id's againt (primari keys database)
-            int _mID = 0;
-            Favorite favorite   = new Favorite(_mID++,data.getStringExtra(DetailsActivity.EXTRA_REPLY));
-            mViewModel.insert(favorite);
-        } else {
-            Toast.makeText(
-                    getApplicationContext(),
-                    R.string.empty_not_saved,
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-
     public void sendData(int position) {
         Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
         // bundle that hold the data of the currently playing song

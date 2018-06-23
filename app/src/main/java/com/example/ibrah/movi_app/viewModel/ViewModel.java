@@ -19,7 +19,8 @@ public static String URL_top;
         URL_top=url_top;
         URL_pop=url_pop;
     }
-    public static LiveData<List<Favorite>> mAllFavorite;
+
+    public static LiveData<List<Movie>> mAllFavorite;
     public static MutableLiveData<List<Movie>> mMovie;
 
     public ViewModel (Application application) {
@@ -29,7 +30,12 @@ public static String URL_top;
         mMovie= mRepository.getDataNetwork();
     }
 
-    LiveData<List<Favorite>> getAllWords() { return mAllFavorite; }
+    LiveData<List<Movie>> getAllWords() {
+        return mAllFavorite;
+    }
     public static MutableLiveData<List<Movie>> getAllMovies(){return mMovie;}
-    public void insert(Favorite favorite) { mRepository.insert(favorite); }
+
+    public void insert(Movie favorite) {
+        mRepository.insert(favorite);
+    }
 }

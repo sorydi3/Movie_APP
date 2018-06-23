@@ -8,7 +8,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-@Database(entities = {Favorite.class}, version = 1)
+import com.example.ibrah.movi_app.Utils.Movie;
+
+@Database(entities = {Movie.class}, version = 1)
 public abstract class favoriteRoomDatabase extends RoomDatabase {
     public abstract favotiteDao wordDao();
     private static favoriteRoomDatabase INSTANCE;
@@ -17,7 +19,7 @@ public abstract class favoriteRoomDatabase extends RoomDatabase {
             synchronized (favoriteRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            favoriteRoomDatabase.class, "favorite_database")
+                            favoriteRoomDatabase.class, "movies_database")
                             .addCallback(sRoomDatabaseCallback)
                             .build();
 
@@ -38,7 +40,7 @@ public abstract class favoriteRoomDatabase extends RoomDatabase {
             super.onOpen(db);
             // If you want to keep the data through app restarts,
             // comment out the following line.
-            new PopulateDbAsync(INSTANCE).execute();
+            // new PopulateDbAsync(INSTANCE).execute();
         }
     };
 

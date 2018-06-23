@@ -1,4 +1,4 @@
-package com.example.ibrah.movi_app;
+package com.example.ibrah.movi_app.Adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.ibrah.movi_app.R;
 import com.example.ibrah.movi_app.Utils.Movie;
 import com.squareup.picasso.Picasso;
 import java.util.List;
@@ -26,7 +28,11 @@ public class Adapter_main extends RecyclerView.Adapter<Adapter_main.ViewHolder> 
     private final LayoutInflater mInflater;
     private List<Movie> mMovie; // Cached copy of words
     public static String TAG="Adapter_main";
-    Adapter_main(Context context) { mInflater = LayoutInflater.from(context);contxt=context; }
+
+    public Adapter_main(Context context) {
+        mInflater = LayoutInflater.from(context);
+        contxt = context;
+    }
 
     @Override
     public Adapter_main.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -62,7 +68,7 @@ public class Adapter_main extends RecyclerView.Adapter<Adapter_main.ViewHolder> 
         });
     }
 
-    void setWords(List<Movie> movies){
+    public void setWords(List<Movie> movies) {
         mMovie = movies;
         notifyDataSetChanged();
     }
@@ -73,7 +79,7 @@ public class Adapter_main extends RecyclerView.Adapter<Adapter_main.ViewHolder> 
         else return 0;
     }
 
-    interface Listener{
+    public interface Listener {
         void onClick(int position);
     }
 

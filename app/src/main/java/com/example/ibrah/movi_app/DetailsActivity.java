@@ -1,6 +1,8 @@
 package com.example.ibrah.movi_app;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +26,11 @@ import com.example.ibrah.movi_app.Utils.Movie;
 import com.example.ibrah.movi_app.Utils.Review;
 import com.example.ibrah.movi_app.Utils.Trailer;
 import com.example.ibrah.movi_app.viewModel.ViewModelDetailActivity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -37,31 +44,32 @@ public class DetailsActivity extends AppCompatActivity {
     FloatingActionButton fab;
     VerticalAdapter adapter1;
     HorizontalAdapter adapter;
-    private String TAG = "DETAIL ACTIVITY---->";
+    private String TAG = "DETAIL ACTIVITY";
     private ViewModelDetailActivity mViewModel;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.colapsing)
+    CollapsingToolbarLayout collapsingToolbarLayout;
     private ArrayList<Movie> movies = new ArrayList<>();
     private ArrayList<Integer> ids = new ArrayList<>();
-//    @BindView(R.id.edit_word)
-//     EditText mEditWordView;
-@BindView(R.id.rating_tv)
-TextView rating;
+    private static String KEY = "ids";
+    @BindView(R.id.ratingBar)
+    RatingBar rating;
     @BindView(R.id.release_date)
     TextView release;
  @BindView(R.id.toolbar_tvv)
  Toolbar toolbar;
     @BindView(R.id.synpsie)
     TextView synopsie;
+    @BindView(R.id.image_detail)
+    ImageView imageView;
     private int mPOSITION;
     Movie movie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            ids = savedInstanceState.getIntegerArrayList("mIds");
-            Log.i(TAG, "onCreate: saved instance called size---------+++++++--------->" + ids.size());
+        if (getArrayList(KEY) != null) {
+            ids = getArrayList(KEY);
         }
-        Log.i(TAG, "ONCREATE CALLED AGAIN: saved instance called size---------+++++++--------->" + ids.size());
+        //Log.i(TAG, "ONCREATE CALLED AGAIN: saved instance called size---------+++++++--------->" + ids.size());
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -73,12 +81,10 @@ TextView rating;
         mPOSITION = bundle.getInt("position");
         movie = movies.get(mPOSITION);
         release.setText(movie.getDate());
-        rating.setText(String.valueOf(movie.getRating()));
+        rating.setRating((float) movie.getRating() / 2);
         synopsie.setText(movie.getmOverview());
         buibdUrl(movie.getmId());
-        collapsingToolbarLayout = findViewById(R.id.colapsing);
         collapsingToolbarLayout.setTitle(movie.getTitle());
-        ImageView imageView = findViewById(R.id.image_detail);
         String image = movie.getThumbnailLink();
         if (image != null && image.length() > 0) {
             Picasso.get().load("https://image.tmdb.org/t/p/w300/" + image).into(imageView);
@@ -115,28 +121,24 @@ TextView rating;
             }
         });
         fab = findViewById(R.id.fab);
+//        if (ids.contains(movie.getmId())) fab.setImageResource(R.drawable.ic_star_black_24dp);
+//        else fab.setImageResource(R.drawable.ic_star_border_black_24dp);
         if (ids.contains(movie.getmId())) fab.setImageResource(R.drawable.ic_star_black_24dp);
         else fab.setImageResource(R.drawable.ic_star_border_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (movie.isSaved()) {
+                if (ids.contains(movie.getmId())) {
                     fab.setImageResource(R.drawable.ic_star_border_black_24dp);
-                    if (ids.contains(movie.getmId())) {
                         mViewModel.delete(movie.getmId());
-                        movie.setSaved(-1);
                         ids.remove(ids.indexOf(movie.getmId()));
                         Toast.makeText(DetailsActivity.this, "Unsaved", Toast.LENGTH_SHORT).show();
-                    }
                 } else {
                     fab.setImageResource(R.drawable.ic_star_black_24dp);
-                    Favorite favorite = new Favorite(movie.getmId(), movie.getTitle());
-                    movie.setSaved(1);
-                    if (!ids.contains(movie.getmId())) {
-                        mViewModel.insert(favorite);
+                    mViewModel.insert(movie);
                         ids.add(movie.getmId());
                         Toast.makeText(DetailsActivity.this, "Saved", Toast.LENGTH_SHORT).show();
-                    }
+
                 }
             }
         });
@@ -144,19 +146,48 @@ TextView rating;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putIntegerArrayList("mIds", ids);
         super.onSaveInstanceState(outState);
+        outState.putIntegerArrayList("mIds", (ArrayList<Integer>) ids);
     }
-
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        ids=savedInstanceState.getIntegerArrayList("mIds");
-//        super.onRestoreInstanceState(savedInstanceState);
-//    }
 
     public void buibdUrl(int id) {
         URL_REVIES = "https://api.themoviedb.org/3/movie/" + id + "/reviews?api_key=61e054df38b65cdfb476d6eeffe14dc3";
         URL_VIDEOS = "https://api.themoviedb.org/3/movie/" + id + "/videos?api_key=61e054df38b65cdfb476d6eeffe14dc3";
     }
 
+    public void saveArraListSharedPreferences(ArrayList<Integer> array, String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(array);
+        editor.putString(key, json);
+        editor.apply();
+    }
+
+    public ArrayList<Integer> getArrayList(String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Gson gson = new Gson();
+        String json = preferences.getString(key, null);
+        Type type = new TypeToken<ArrayList<Integer>>() {
+        }.getType();
+        return gson.fromJson(json, type);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveArraListSharedPreferences(ids, KEY);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        saveArraListSharedPreferences(ids, KEY);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        saveArraListSharedPreferences(ids, KEY);
+    }
 }

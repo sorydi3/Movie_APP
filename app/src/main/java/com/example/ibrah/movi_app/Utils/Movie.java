@@ -1,36 +1,43 @@
 package com.example.ibrah.movi_app.Utils;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
+@Entity(tableName = "movies_table")
 public class Movie implements Parcelable {
 
     /**
      * A {@link Movie} object that contains details related to a single
      * book item to be displayed in BookListActivity
      */
-     private int saved;
-     private int mId;
+    @PrimaryKey
+    public int mId;
+
+    public int saved;
     /**
      * Movie Title
      */
-    private String mTitle;
+    public String mTitle;
 
     /**
      * Movie Author
      */
-    private String mDate;
+    public String mDate;
 
     /**
      * Rating
      */
-    private int mRating;
+    public int mRating;
 
     /**
      * Thumbnail Link
      */
-    private String mThumbnailLink;
-    private String mOverview;
+    public String mThumbnailLink;
+    public String mOverview;
 
 
     /**
@@ -40,18 +47,21 @@ public class Movie implements Parcelable {
      * @param date        - Author of the movie
      * @param rating        - Rating of the movie (e.g. 3.5)
      * @param thumbnailLink - Link for the book image
-     * @param mOverview
+     * @param saved -denote if saved movie
+     * @param mOverview -describe *this movie
      */
-    public Movie(int mId, String title, String date, int rating, String thumbnailLink, int sav, String mOverview) {
+
+    public Movie(int mId, @NonNull String title, String date, int rating, String thumbnailLink, int saved, String mOverview) {
         this.mId = mId;
         mTitle = title;
         mDate = date;
         mRating = rating;
         mThumbnailLink = thumbnailLink;
-        this.saved=sav;
+        this.saved = saved;
         this.mOverview = mOverview;
     }
 
+    @Ignore
     public Movie(Parcel input) {
         mId = input.readInt();
         saved=input.readInt();

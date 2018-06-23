@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 
 import com.example.ibrah.movi_app.DatabaBase.Favorite;
 import com.example.ibrah.movi_app.DatabaBase.favoriteRepositori;
+import com.example.ibrah.movi_app.Utils.Movie;
 
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class ViewModelFavorite extends AndroidViewModel {
 
     public static favoriteRepositori mRepository;
 
-    public static LiveData<List<Favorite>> mAllFavorite;
+    public static LiveData<List<Movie>> mAllFavorite;
 
     public ViewModelFavorite(Application application) {
         super(application);
@@ -22,7 +23,7 @@ public class ViewModelFavorite extends AndroidViewModel {
         mAllFavorite = mRepository.getmAllFavorite();
     }
 
-    public LiveData<List<Favorite>> getmAllFavorite() {
+    public LiveData<List<Movie>> getmAllFavorite() {
         return mAllFavorite;
     }
 

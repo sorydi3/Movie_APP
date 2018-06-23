@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.ibrah.movi_app.DatabaBase.Favorite;
 import com.example.ibrah.movi_app.DatabaBase.favoriteRoomDatabase;
@@ -25,14 +26,14 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class favoriteRepositori {
-
+    public static String TAG = "REPOSITORI";
     private favotiteDao mWordDao;
-    public LiveData<List<Favorite>> mAllFavorite;
+    public LiveData<List<Movie>> mAllFavorite;
     public static MutableLiveData<List<Movie>>mMovie=new MutableLiveData<>();
     public static MutableLiveData<List<Trailer>> mTrailers = new MutableLiveData<>();
     public static MutableLiveData<List<Review>> mReviews = new MutableLiveData<>();
     public static int optionQuerry=0;
-    public static Long mRowDeleted;
+    public static List<Movie> mId;
 
    public favoriteRepositori(Application application) {
         favoriteRoomDatabase db = favoriteRoomDatabase.getDatabase(application);
@@ -40,10 +41,44 @@ public class favoriteRepositori {
         mAllFavorite = mWordDao.ListOfFavorits();
     }
 
-    public LiveData<List<Favorite>> getmAllFavorite() {
+    public LiveData<List<Movie>> getmAllFavorite() {
         return mAllFavorite;
     }
-    public void insert (Favorite word) {
+
+    public List<Movie> getmId(int id) {
+        new GetIdAsyncTask(mWordDao).execute(id);
+        return mId;
+    }
+
+    private static class GetIdAsyncTask extends AsyncTask<Integer, Void, List<Movie>> {
+
+        private favotiteDao mAsyncTaskDao;
+
+        GetIdAsyncTask(favotiteDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected List<Movie> doInBackground(final Integer... params) {
+            mAsyncTaskDao.deleteFavoriteMovie(params[0]);
+            List<Movie> movie = mAsyncTaskDao.getmId(params[0]);
+            if (movie != null)
+                Log.e(TAG, "id movie database------inside do in background--------------->" + movie.size());
+            else
+                Log.e(TAG, "id movie database--------------------->NULLLLLLLLLL");
+            return movie;
+        }
+
+        @Override
+        protected void onPostExecute(List<Movie> movie) {
+            super.onPostExecute(movie);
+            mId = movie;
+            if (movie != null)
+                Log.e(TAG, "id movie database--------------------->" + movie.size());
+        }
+    }
+
+    public void insert(Movie word) {
         new insertAsyncTask(mWordDao).execute(word);
     }
 
@@ -79,7 +114,7 @@ public class favoriteRepositori {
 
     }
 
-    private static class insertAsyncTask extends AsyncTask<Favorite, Void, Void> {
+    private static class insertAsyncTask extends AsyncTask<Movie, Void, Void> {
 
         private favotiteDao mAsyncTaskDao;
 
@@ -88,7 +123,7 @@ public class favoriteRepositori {
         }
 
         @Override
-        protected Void doInBackground(final Favorite... params) {
+        protected Void doInBackground(final Movie... params) {
             mAsyncTaskDao.InsertFavoriteMovie(params[0]);
             return null;
         }
@@ -163,5 +198,5 @@ public class favoriteRepositori {
             mReviews.setValue(reviews);
         }
     }
-    //TODO ADD ASYNCROS ABOVE 
+
 }

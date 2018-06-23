@@ -25,6 +25,9 @@ public class ViewModelDetailActivity extends AndroidViewModel {
         mReviews = mRepository.getDataNetworkReviews();
     }
 
+    public List<Movie> getmId(int id) {
+        return mRepository.getmId(id);
+    }
     public MutableLiveData<List<Review>> getAllReviews() {
         return mReviews;
     }
@@ -32,7 +35,10 @@ public class ViewModelDetailActivity extends AndroidViewModel {
     public MutableLiveData<List<Trailer>> getAllTrailers() {
         return mTrailers;
     }
-    public void insert(Favorite favorite) { mRepository.insert(favorite); }
+
+    public void insert(Movie favorite) {
+        mRepository.insert(favorite);
+    }
 
     public void delete(int id) {
         mRepository.delete(id);

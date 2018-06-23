@@ -6,18 +6,25 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
+import com.example.ibrah.movi_app.Utils.Movie;
+
 import java.util.List;
 
 @Dao
 public interface favotiteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Long InsertFavoriteMovie(Favorite favorite);
-    @Query("DELETE FROM favorite_table ")
-    void DeleteAll();
-    @Query("SELECT * FROM favorite_table ORDER BY mId asc")
-    LiveData<List<Favorite>> ListOfFavorits();
+    Long InsertFavoriteMovie(Movie favorite);
 
-    @Query("DELETE  FROM favorite_table WHERE mId=:id")
+    @Query("DELETE FROM movies_table ")
+    void DeleteAll();
+
+    @Query("SELECT * FROM movies_table ORDER BY mId asc")
+    LiveData<List<Movie>> ListOfFavorits();
+
+    @Query("DELETE  FROM movies_table WHERE mId=:id")
     void deleteFavoriteMovie(int id);
+
+    @Query("SELECT * FROM movies_table WHERE mId=:id LIMIT 1")
+    List<Movie> getmId(int id);
 }
